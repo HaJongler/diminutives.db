@@ -19,8 +19,50 @@
 set_time_limit(0);
 
 define("MEDIAWIKI_API_URL", "http://en.wiktionary.org/w/api.php");
-$sex = "male";
 
+
+//-----------------------------------------------------------------------------
+// Parse command line options
+//-----------------------------------------------------------------------------
+function print_usage() {
+	global $argv;
+	fputs(STDERR, "Usage: php ${argv[0]} [OPTION]...\n");
+	fputs(STDERR, "Write a CSV file of formal given names and common diminutives of each to\n" . "standard out.\n\n");
+	fputs(STDERR, "Options:\n");
+	fputs(STDERR, "  -s SEX, --sex SEX         either \"male\" or \"female\"\n");
+	fputs(STDERR, "  --help                    display this help message and exit\n");
+	fputs(STDERR, "\n");
+}
+
+$opt = getopt("s:", array(
+	"sex:",
+	"help"
+));
+
+if (isset($opt["help"])) {
+	print_usage();
+	exit(0);
+} else if (empty($opt["s"]) && empty($opt["sex"])) {
+	fputs(STDERR, "Sex (\"male\" or \"female\") must be specified.\n");
+	print_usage();
+	exit(1);
+}
+
+$sex = strtolower(empty($opt["sex"]) ? $opt["s"] : $opt["sex"]);
+if ($sex == "m")
+	$sex = "male";
+else if ($sex == "f")
+	$sex = "female";
+else if ($sex != "male" && $sex != "female") {
+	fputs(STDERR, "Invalid sex (must be \"male\" or \"female\")\n");
+	print_usage();
+	exit(1);
+}
+
+
+//-----------------------------------------------------------------------------
+// Initialize the CURL handle
+//-----------------------------------------------------------------------------
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_USERAGENT, "curl 7.21.0 (x86_64-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.15 libssh2/1.2.5 <dtrebbien@gmail.com>");
 curl_setopt($ch, CURLOPT_COOKIEFILE, "cookies.txt");
@@ -63,6 +105,10 @@ function get_category_members($cmtitle, $cmnamespace = "0") {
 	return $ret;
 }
 
+
+//-----------------------------------------------------------------------------
+// Determine the Wiktionary articles that are in Category:English_diminutives_of_SEX_given_names and save the list to a file.
+//-----------------------------------------------------------------------------
 $cat = "English diminutives of $sex given names";
 $cat = str_replace(" ", "_", $cat);
 $category_member_titles = get_category_members("Category:$cat");
@@ -77,6 +123,10 @@ if ($fp === FALSE) {
 }
 fclose($fp);
 
+
+//-----------------------------------------------------------------------------
+// Download the latest revision text for each article concerning a diminutive
+//-----------------------------------------------------------------------------
 function extract_first_rev(XMLReader $xml_reader)
 {
 	while ($xml_reader->read()) {
@@ -122,6 +172,10 @@ while (! empty($category_member_titles)) {
 	sleep(3);
 }
 
+
+//-----------------------------------------------------------------------------
+// Extract formal given names and a list of common diminutives of each
+//-----------------------------------------------------------------------------
 function extract_sections($content, $level) {
 	$ret = array();
 	$delimiter = str_repeat("=", $level);
@@ -240,6 +294,10 @@ foreach ($category_member_contents as $title => $content) {
 		echo "$htmlencoded_title\n";
 }
 
+
+//-----------------------------------------------------------------------------
+// Print a CSV of the extracted information on diminutives to STDOUT.
+//-----------------------------------------------------------------------------
 ksort($diminutives);
 
 $fp = fopen("gen/${sex}_diminutives.csv", "w+");
