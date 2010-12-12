@@ -209,7 +209,7 @@ function extract_linked_titles($content) {
 	return $ret;
 }
 
-function extract_single_word_proper_nouns($content) {
+function extract_capitalized_words($content) {
 	$ret = array();
 	preg_match_all("~[[:upper:]]\w*~", $content, $matches, PREG_SET_ORDER);
 	foreach ($matches as $match) {
@@ -223,7 +223,7 @@ function remove_special_tags_and_inner_content($content) {
 	return $content;
 }
 
-$diminutives = array();
+$diminutives_map = array();
 
 foreach ($category_member_contents as $title => $content) {
 	$level2_sections = extract_sections($content, 2);
@@ -252,12 +252,12 @@ foreach ($category_member_contents as $title => $content) {
 	preg_match_all("~^#(.*)$~m", $english_proper_noun_section_content, $matches, PREG_SET_ORDER);
 	$b = FALSE;
 	foreach ($matches as $match) {
-		$li_content = substr(trim($match[1]), 1); // as each "sense" on Wiktionary begins with a capital letter, this is a trick to get rid of many capitalized words that are not proper nouns.
+		$li_content = substr(trim($match[1]), 1); // as each "sense" on Wiktionary begins with a capital letter, this is a trick to get rid of many capitalized words that are not actually proper nouns.
 		if (stripos($li_content, " $sex") !== FALSE ||
 			stripos($li_content, "|$sex") !== FALSE ||  // {{given name|male|diminutive=...}}
 			stripos($li_content, "[$sex") !== FALSE) { // [[male]]
-			$single_word_proper_nouns = extract_single_word_proper_nouns($li_content);
-			$given_names = array_filter($single_word_proper_nouns, function($word) use($title) {
+			$capitalized_words = extract_capitalized_words($li_content);
+			$given_names = array_filter($capitalized_words, function($word) use($title) {
 				if ($word == "An" || $word == "The")
 					return FALSE;
 				else if (strlen($word) <= 1) // special case for the Jay article and others
@@ -283,10 +283,10 @@ foreach ($category_member_contents as $title => $content) {
 			foreach ($given_names as $given_name) {
 				$given_name = $given_name;//mb_strtoupper($given_name, "UTF-8");
 				$diminutive = $title;//mb_strtoupper($title, "UTF-8");
-				if (! isset($diminutives[$given_name]))
-					$diminutives[$given_name] = array($diminutive);
+				if (! isset($diminutives_map[$given_name]))
+					$diminutives_map[$given_name] = array($diminutive);
 				else
-					$diminutives[$given_name][] = $diminutive;
+					$diminutives_map[$given_name][] = $diminutive;
 			}
 			$b = TRUE;
 		}
@@ -300,12 +300,12 @@ foreach ($category_member_contents as $title => $content) {
 //-----------------------------------------------------------------------------
 // Print a CSV of the extracted information on diminutives to `gen/SEX_diminutives.csv`.
 //-----------------------------------------------------------------------------
-ksort($diminutives);
+ksort($diminutives_map);
 
 $fp = fopen("gen/${sex}_diminutives.csv", "w+");
-foreach ($diminutives as $given_name => $ds) {
-	array_unshift($ds, $given_name);
-	$str = implode(",", $ds);
+foreach ($diminutives_map as $given_name => $diminutives) {
+	array_unshift($diminutives, $given_name);
+	$str = implode(",", $diminutives);
 	fputs($fp, "$str\n");
 }
 fclose($fp);
