@@ -19,7 +19,7 @@
 set_time_limit(0);
 
 define("MEDIAWIKI_API_URL", "http://en.wiktionary.org/w/api.php");
-$sex = "female";
+$sex = "male";
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_USERAGENT, "curl 7.21.0 (x86_64-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.15 libssh2/1.2.5 <dtrebbien@gmail.com>");
@@ -239,6 +239,8 @@ foreach ($category_member_contents as $title => $content) {
 	if (! $b)
 		echo "$htmlencoded_title\n";
 }
+
+ksort($diminutives);
 
 $fp = fopen("gen/${sex}_diminutives.csv", "w+");
 foreach ($diminutives as $given_name => $ds) {
