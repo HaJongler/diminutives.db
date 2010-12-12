@@ -27,7 +27,7 @@ define("MEDIAWIKI_API_URL", "http://en.wiktionary.org/w/api.php");
 function print_usage() {
 	global $argv;
 	fputs(STDERR, "Usage: php ${argv[0]} [OPTION]...\n");
-	fputs(STDERR, "Write a CSV file of formal given names and common diminutives of each to\n" . "standard out.\n\n");
+	fputs(STDERR, "Write a CSV file of formal given names and common diminutives of each to\n" . "`./gen/\$(SEX)_diminutives.csv`.\n\n");
 	fputs(STDERR, "Options:\n");
 	fputs(STDERR, "  -s SEX, --sex SEX         either \"male\" or \"female\"\n");
 	fputs(STDERR, "  --help                    display this help message and exit\n");
@@ -71,6 +71,10 @@ curl_setopt($ch, CURLOPT_ENCODING, "deflate, gzip, identity");
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
+
+//-----------------------------------------------------------------------------
+// Determine the Wiktionary articles that are in Category:English_diminutives_of_SEX_given_names and save the list to a file.
+//-----------------------------------------------------------------------------
 function get_category_members($cmtitle, $cmnamespace = "0") {
 	global $ch;
 	
@@ -105,10 +109,6 @@ function get_category_members($cmtitle, $cmnamespace = "0") {
 	return $ret;
 }
 
-
-//-----------------------------------------------------------------------------
-// Determine the Wiktionary articles that are in Category:English_diminutives_of_SEX_given_names and save the list to a file.
-//-----------------------------------------------------------------------------
 $cat = "English diminutives of $sex given names";
 $cat = str_replace(" ", "_", $cat);
 $category_member_titles = get_category_members("Category:$cat");
@@ -296,7 +296,7 @@ foreach ($category_member_contents as $title => $content) {
 
 
 //-----------------------------------------------------------------------------
-// Print a CSV of the extracted information on diminutives to STDOUT.
+// Print a CSV of the extracted information on diminutives to `gen/SEX_diminutives.csv`.
 //-----------------------------------------------------------------------------
 ksort($diminutives);
 
