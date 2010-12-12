@@ -26,12 +26,12 @@ define("MEDIAWIKI_API_URL", "http://en.wiktionary.org/w/api.php");
 //-----------------------------------------------------------------------------
 function print_usage() {
 	global $argv;
-	fputs(STDERR, "Usage: php ${argv[0]} [OPTION]...\n");
-	fputs(STDERR, "Write a CSV file of formal given names and common diminutives of each to\n" . "`./gen/\$(SEX)_diminutives.csv`.\n\n");
-	fputs(STDERR, "Options:\n");
-	fputs(STDERR, "  -s SEX, --sex SEX         either \"male\" or \"female\"\n");
-	fputs(STDERR, "  --help                    display this help message and exit\n");
-	fputs(STDERR, "\n");
+	fputs(STDERR, "Usage: php ${argv[0]} [OPTION]..." . PHP_EOL);
+	fputs(STDERR, "Write a CSV file of formal given names and common diminutives of each to\n" . "`./gen/\$(SEX)_diminutives.csv`." . PHP_EOL . PHP_EOL);
+	fputs(STDERR, "Options:" . PHP_EOL);
+	fputs(STDERR, "  -s SEX, --sex SEX         either \"male\" or \"female\"" . PHP_EOL);
+	fputs(STDERR, "  --help                    display this help message and exit" . PHP_EOL);
+	fputs(STDERR, PHP_EOL);
 }
 
 $opt = getopt("s:", array(
@@ -43,7 +43,7 @@ if (isset($opt["help"])) {
 	print_usage();
 	exit(0);
 } else if (empty($opt["s"]) && empty($opt["sex"])) {
-	fputs(STDERR, "Sex (\"male\" or \"female\") must be specified.\n");
+	fputs(STDERR, "Sex (\"male\" or \"female\") must be specified." . PHP_EOL);
 	print_usage();
 	exit(1);
 }
@@ -54,7 +54,7 @@ if ($sex == "m")
 else if ($sex == "f")
 	$sex = "female";
 else if ($sex != "male" && $sex != "female") {
-	fputs(STDERR, "Invalid sex (must be \"male\" or \"female\")\n");
+	fputs(STDERR, "Invalid sex (must be \"male\" or \"female\")" . PHP_EOL);
 	print_usage();
 	exit(1);
 }
@@ -120,7 +120,7 @@ if ($fp === FALSE) {
 	var_dump($category_member_titles);
 } else {
 	foreach ($category_member_titles as $title) {
-		fputs($fp, $title . "\r\n");
+		fputs($fp, $title . PHP_EOL);
 	}
 }
 fclose($fp);
@@ -293,7 +293,7 @@ foreach ($category_member_contents as $title => $content) {
 	}
 	
 	if (! $b)
-		echo "$htmlencoded_title\n";
+		echo $htmlencoded_title . PHP_EOL;
 }
 
 
@@ -306,6 +306,6 @@ $fp = fopen("gen/${sex}_diminutives.csv", "w+");
 foreach ($diminutives_map as $given_name => $diminutives) {
 	array_unshift($diminutives, $given_name);
 	$str = implode(",", $diminutives);
-	fputs($fp, "$str\n");
+	fputs($fp, $str . PHP_EOL);
 }
 fclose($fp);
