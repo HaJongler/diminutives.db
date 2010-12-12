@@ -64,7 +64,9 @@ else if ($sex != "male" && $sex != "female") {
 // Initialize the CURL handle
 //-----------------------------------------------------------------------------
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_USERAGENT, "curl 7.21.0 (x86_64-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.15 libssh2/1.2.5 <dtrebbien@gmail.com>");
+$cv = curl_version();
+$user_agent = "curl ${cv['version']} (${cv['host']}) libcurl/${cv['version']} ${cv['ssl_version']} zlib/${cv['libz_version']} <git://github.com/dtrebbien/diminutives.db.git>";
+curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 curl_setopt($ch, CURLOPT_COOKIEFILE, "cookies.txt");
 curl_setopt($ch, CURLOPT_COOKIEJAR, "cookies.txt");
 curl_setopt($ch, CURLOPT_ENCODING, "deflate, gzip, identity");
