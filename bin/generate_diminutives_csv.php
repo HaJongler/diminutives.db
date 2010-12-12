@@ -87,9 +87,11 @@ function get_category_members($cmtitle, $cmnamespace = "0") {
 	
 	$urlencoded_cmcontinue = "";
 	do {
+		curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
 		curl_setopt($ch, CURLOPT_URL, MEDIAWIKI_API_URL . "?action=query&list=categorymembers&cmtitle=$urlencoded_cmtitle&cmnamespace=$urlencoded_cmnamespace&cmcontinue=$urlencoded_cmcontinue&cmlimit=300&format=xml");
-		$urlencoded_cmcontinue = "";
 		$xml = curl_exec($ch);
+		
+		$urlencoded_cmcontinue = "";
 		
 		$xml_reader = new XMLReader();
 		$xml_reader->xml($xml, "UTF-8");
@@ -157,6 +159,7 @@ while (! empty($category_member_titles)) {
 	$titles = implode("|", $titles);
 	$urlencoded_titles = urlencode($titles);
 	
+	curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
 	curl_setopt($ch, CURLOPT_URL, MEDIAWIKI_API_URL . "?action=query&prop=revisions&titles=$urlencoded_titles&rvprop=content&format=xml");
 	$xml = curl_exec($ch);
 	
