@@ -305,6 +305,7 @@ ksort($diminutives_map);
 
 $fp = fopen("gen/${sex}_diminutives.csv", "w+");
 foreach ($diminutives_map as $given_name => $diminutives) {
+	sort($diminutives);
 	array_unshift($diminutives, $given_name);
 	$str = implode(",", $diminutives);
 	fputs($fp, $str . PHP_EOL);
