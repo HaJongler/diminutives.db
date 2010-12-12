@@ -115,6 +115,7 @@ $cat = "English diminutives of $sex given names";
 $cat = str_replace(" ", "_", $cat);
 $category_member_titles = get_category_members("Category:$cat");
 
+@mkdir("gen");
 $fp = @fopen("gen/$cat.txt", "w+");
 if ($fp === FALSE) {
 	var_dump($category_member_titles);
