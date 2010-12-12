@@ -227,6 +227,7 @@ function remove_special_tags_and_inner_content($content) {
 $diminutives_map = array();
 
 foreach ($category_member_contents as $title => $content) {
+	unset($english_section);
 	$level2_sections = extract_sections($content, 2);
 	foreach ($level2_sections as $level2_section) {
 		if (strcasecmp($level2_section[0], "English") == 0) {
@@ -238,6 +239,7 @@ foreach ($category_member_contents as $title => $content) {
 	if (! isset($english_section))
 		throw new Exception("No \"English\" section was found for the page with title \"$htmlencoded_title\".");
 	
+	unset($english_proper_noun_section_content);
 	$level3_sections = extract_sections($english_section[1], 3);
 	foreach ($level3_sections as $level3_section) {
 		if (strcasecmp($level3_section[0], "Proper noun") == 0) {
@@ -246,8 +248,10 @@ foreach ($category_member_contents as $title => $content) {
 		}
 	}
 	
-	if (! isset($english_proper_noun_section_content))
-		throw new Exception("No \"Proper noun\" subsection of the English section was found for the page with title \"$htmlencoded_title\".");
+	if (! isset($english_proper_noun_section_content)) {
+		echo $title . PHP_EOL;
+		continue;
+	}
 	
 	// go through the ordered list items
 	preg_match_all("~^#(.*)$~m", $english_proper_noun_section_content, $matches, PREG_SET_ORDER);
