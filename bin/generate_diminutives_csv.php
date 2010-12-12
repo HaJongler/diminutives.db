@@ -132,12 +132,18 @@ fclose($fp);
 //-----------------------------------------------------------------------------
 // Download the latest revision text for each article concerning a diminutive
 //-----------------------------------------------------------------------------
+if (! class_exists("Normalizer"))
+	fputs(STDERR, "Warning: The intl extension was not loaded.\n");
+
 function extract_first_rev(XMLReader $xml_reader)
 {
 	while ($xml_reader->read()) {
 		if ($xml_reader->nodeType == XMLReader::ELEMENT) {
 			if ($xml_reader->name == "rev") {
-				return htmlspecialchars_decode($xml_reader->readInnerXML(), ENT_QUOTES);
+				$content = htmlspecialchars_decode($xml_reader->readInnerXML(), ENT_QUOTES);
+				if (class_exists("Normalizer")) // from the intl extension
+					$content = Normalizer::normalize($content, Normalizer::FORM_C);
+				return $content;
 			}
 		} else if ($xml_reader->nodeType == XMLReader::END_ELEMENT) {
 			if ($xml_reader->name == "page") {
@@ -215,7 +221,7 @@ function extract_linked_titles($content) {
 
 function extract_capitalized_words($content) {
 	$ret = array();
-	preg_match_all("~[[:upper:]]\w*~", $content, $matches, PREG_SET_ORDER);
+	preg_match_all("~\p{Lu}\p{L}*~", $content, $matches, PREG_SET_ORDER);
 	foreach ($matches as $match) {
 		$ret[] = $match[0];
 	}
