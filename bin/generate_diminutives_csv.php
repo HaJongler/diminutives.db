@@ -252,8 +252,11 @@ foreach ($category_member_contents as $title => $content) {
 	$level3_sections = extract_sections($english_section[1], 3);
 	foreach ($level3_sections as $level3_section) {
 		if (strcasecmp($level3_section[0], "Proper noun") == 0) {
-			$english_proper_noun_section_content = remove_special_tags_and_inner_content($level3_section[1]);
-			break;
+			$res = remove_special_tags_and_inner_content($level3_section[1]);
+			if (empty($english_proper_noun_section_content))
+				$english_proper_noun_section_content = $res;
+			else
+				$english_proper_noun_section_content .= "\n\n$res"; // special case to handle the Mo article, which has two level-3 "Proper noun" sections
 		}
 	}
 	
