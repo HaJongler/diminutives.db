@@ -61,7 +61,6 @@ Dennis,Den,Denny
 Derek,Del
 Desmond,Des
 Dick,Dickie
-Dmitry,Dima
 Dominic,Dom
 Don,Donnie,Donny
 Donald,Donnie,Donny
@@ -97,11 +96,12 @@ Greig,Greg
 Gustav,Gus
 Harold,Hal,Harry
 Harry,Hal
-Hebrew,Ron,Ron
+Hebrew,Jon,Ron,Ron
 Henry,Hal,Hank,Harry
 Herbert,Herb,Herbie
 Howard,Howie
 Hugh,Huey,Hughie
+Humphrey,Huffie
 Isaac,Ike
 Isidore,Dore
 Jack,Jackie,Jacky,Jak
@@ -117,7 +117,7 @@ Jim,Jimmy
 Jimmy,Jimi
 Joe,Jo,Jody,Joey
 Johannes,Joh
-John,Jackie,Jacky,Johnnie,Johnny
+John,Jackie,Jacky,Johnnie,Johnny,Jon
 Jonathan,Jon,Jonty
 Joseph,Jo,Jody,Joe,Joey
 Joshua,Josh
@@ -139,7 +139,7 @@ Mark,Marky
 Martin,Marty
 Marvin,Marv
 Matthew,Mat,Matt,Matty
-Maurice,Moe,Mossie
+Maurice,Mo,Moe,Mossie
 Max,Mack,Maxie,Maxy
 Melvin,Mel
 Melvyn,Mel
@@ -150,7 +150,7 @@ Montague,Monty
 Montgomery,Monty
 Mortimer,Mort
 Morton,Mort
-Moses,Moe
+Moses,Mo,Moe
 Moshe,Moishy
 Nathan,Nate
 Nathanael,Nat,Nate
