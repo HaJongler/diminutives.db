@@ -20,4 +20,4 @@ You should be aware of the following special case which cannot be added to the d
 ## License
 Scripts are licensed under the terms of the [GNU General Public License version 3](http://www.gnu.org/licenses/gpl.html) or any later version.
 
-The data in [`male_diminutives.csv`](https://github.com/dtrebbien/diminutives.db/blob/master/male_diminutives.csv) and [`female_diminutives.csv`](https://github.com/dtrebbien/diminutives.db/blob/master/female_diminutives.csv) is Public Domain.
+The data in [`male_diminutives.csv`](https://github.com/dtrebbien/diminutives.db/blob/master/male_diminutives.csv) and [`female_diminutives.csv`](https://github.com/dtrebbien/diminutives.db/blob/master/female_diminutives.csv) are Public Domain.
